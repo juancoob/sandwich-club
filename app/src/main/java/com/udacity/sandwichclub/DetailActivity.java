@@ -3,6 +3,7 @@ package com.udacity.sandwichclub;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,7 +39,7 @@ public class DetailActivity extends AppCompatActivity {
             closeOnError();
         }
 
-        int position = intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION);
+        int position = intent != null ? intent.getIntExtra(EXTRA_POSITION, DEFAULT_POSITION) : DEFAULT_POSITION;
         if (position == DEFAULT_POSITION) {
             // EXTRA_POSITION not found in intent
             closeOnError();
@@ -78,19 +79,8 @@ public class DetailActivity extends AppCompatActivity {
     private void populateUI(Sandwich sandwich) {
         StringBuilder alsoKnownAsBuilder = new StringBuilder();
         StringBuilder ingredientsBuilder = new StringBuilder();
-        for(int nameIterator = 0; nameIterator < sandwich.getAlsoKnownAs().size(); nameIterator++) {
-            alsoKnownAsBuilder.append(sandwich.getAlsoKnownAs().get(nameIterator));
-            // Only add comma if we don't reach the end
-            if(nameIterator + 1 != sandwich.getAlsoKnownAs().size()) {
-                alsoKnownAsBuilder.append(", ");
-            }
-        }
-        for(int ingredientIterator = 0; ingredientIterator < sandwich.getIngredients().size(); ingredientIterator++) {
-            ingredientsBuilder.append(sandwich.getIngredients().get(ingredientIterator));
-            if(ingredientIterator + 1 != sandwich.getIngredients().size()) {
-                ingredientsBuilder.append(", ");
-            }
-        }
+        alsoKnownAsBuilder.append(TextUtils.join(", ", sandwich.getAlsoKnownAs()));
+        ingredientsBuilder.append(TextUtils.join(", ", sandwich.getIngredients()));
         alsoKnownAs.setText(alsoKnownAsBuilder.toString().isEmpty() ? "--" : alsoKnownAsBuilder.toString());
         ingredients.setText(ingredientsBuilder.toString().isEmpty() ? "--" : ingredientsBuilder.toString());
         placeOfOrigin.setText(sandwich.getPlaceOfOrigin().isEmpty() ? "--" : sandwich.getPlaceOfOrigin());
